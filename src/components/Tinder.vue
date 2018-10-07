@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;">
+  <div style="width: 100%;npm">
     <div class="vue-tinder-wrapper">
       <div
         class="vue-tinder"
@@ -30,13 +30,13 @@
 
             <template v-if="isCur(index)">
               <span slot="nope" class="pointer-wrap nope-pointer-wrap" :style="{opacity:nopeOpacity}">
-                <img class="nope-pointer" :opacity="nopeOpacity" src="https://johnnydan.oss-cn-beijing.aliyuncs.com/vue-tinder/nope-txt.png">
+                <img class="nope-pointer" :opacity="nopeOpacity" src="../assets/nope.png">
               </span>
               <span slot="like" class="pointer-wrap like-pointer-wrap" :style="{opacity:likeOpacity}">
-                <img class="like-pointer" :opacity="likeOpacity" src="https://johnnydan.oss-cn-beijing.aliyuncs.com/vue-tinder/like-txt.png">
+                <img class="like-pointer" :opacity="likeOpacity" src="../assets/like.png">
               </span>
               <span v-if="allowSuper" slot="super" class="pointer-wrap super-pointer-wrap" :style="{opacity:superOpacity}">
-                <img class="super-pointer" :opacity="superOpacity" src="https://johnnydan.oss-cn-beijing.aliyuncs.com/vue-tinder/super-txt.png">
+                <img class="super-pointer" :opacity="superOpacity" src="../assets/super-like.png">
               </span>
             </template>
           </TinderCard>
@@ -44,9 +44,9 @@
       </div>
     </div>
     <div class="btns">
-      <img src="https://johnnydan.oss-cn-beijing.aliyuncs.com/vue-tinder/nope.png" @click="decide('nope')">
-      <img src="https://johnnydan.oss-cn-beijing.aliyuncs.com/vue-tinder/super-like.png" @click="decide('super')">
-      <img src="https://johnnydan.oss-cn-beijing.aliyuncs.com/vue-tinder/like.png" @click="decide('like')">
+      <img src="../assets/nope.png" @click="decide('nope')">
+      <img src="../assets/super-like.png" @click="decide('super')">
+      <img src="../assets/like.png" @click="decide('like')">
     </div>
   </div>
 </template>
@@ -76,7 +76,7 @@ export default class Home extends Vue {
     touchId: null,
     start: {},
     move: {},
-    startPoint: 1, // 1：上，-1：下
+    startPoint: 1,
     ratio: 0,
     result: null,
   };
@@ -155,20 +155,15 @@ export default class Home extends Vue {
     if (e.type === 'touchstart') {
       pageX = e.changedTouches[0].pageX;
       pageY = e.changedTouches[0].pageY;
-      // TODO: iOS侧滑返回区域，不应该继续，这个区域还需要调整，有必要的话还要区分下iOS/Android
-      // if (pageX < ?) {
-      //   return
-      // }
     } else {
       pageX = e.clientX;
       pageY = e.clientY;
     }
-    // 判断触摸起始位置在卡片的上部还是下部
     const top = this.size.top;
     const height = this.size.height;
     const centerY = (top + height / 2);
     const startPoint = pageY > centerY ? -1 : 1;
-    // 初始化
+
     this.status = 1;
     this.state = {
       touchId: e.type === 'touchstart' ? e.changedTouches[0].identifier : 'mouse',
@@ -231,18 +226,16 @@ export default class Home extends Vue {
 
   public mainCardStyle(): object {
     const style = { zIndex: 10, transform: '', transition: '' };
-    if (this.status === 0) { // 初始化位置
+    if (this.status === 0) {
       style.transform = 'scale(1) translate3d(0,0,0) rotate(0deg)';
       style.transition = 'all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    } else if (this.status === 1) { // 移动中，位移及旋转角度
+    } else if (this.status === 1) {
       const state = this.state;
       const {start, move, startPoint} = state;
       const x = move.x - start.x || 0;
       const y = move.y - start.y || 0;
-      // 横向滑动卡片一半宽(0.5)时为标准状态
       const ratio = x / (this.size.width * 0.5);
       state.ratio = ratio;
-      // 标准状态（ratio为1时）10度角
       const rotate = 10 * ratio * startPoint;
       style.transform = `translate3d(${x}px,${y}px,0) rotate(${rotate}deg)`;
       style.transition = 'none';
@@ -251,7 +244,6 @@ export default class Home extends Vue {
   }
 
   public benchCardStyle(index: number): object {
-    // 当前条件卡片不应该被显示
     if ((index === 1 && this.status === 2) || index > 1) {
       return {
         zIndex: -1,
@@ -260,11 +252,10 @@ export default class Home extends Vue {
     }
     const style = { zIndex: 9, transform: '', transition: '' };
 
-    if (this.status === 0) { // 初始化替补图位置
+    if (this.status === 0) {
       style.transform = 'scale3d(0.95,0.95,1)';
       style.transition = 'all 500ms ease';
-    } else if (this.status === 1) { // 移动中，替补图渐渐放大
-      // scale区间：[0.95-1]
+    } else if (this.status === 1) {
       let ratio = this.state.ratio;
       if (ratio > 1) {
         ratio = 1;
@@ -273,7 +264,7 @@ export default class Home extends Vue {
       }
       style.transform = `scale3d(${Math.abs(ratio) * 0.05 + 0.95},${Math.abs(ratio) * 0.05 + 0.95},1)`;
       style.transition = 'none';
-    } else if (this.status === 2) { // 第一张在消失中，第二张替补为主图，要过渡到最大
+    } else if (this.status === 2) {
       style.transform = 'scale3d(1,1,1)';
       style.transition = 'all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     }
@@ -308,7 +299,7 @@ export default class Home extends Vue {
       touchId: null,
       start: {},
       move: {},
-      startPoint: 1, // 1：上，-1：下
+      startPoint: 1,
       ratio: 0,
       result: null,
     };
@@ -352,20 +343,17 @@ export default class Home extends Vue {
   max-width: 355px;
 }
 
-/* style正在被数据绑定，只能使用important来覆盖 */
 .v-move { transition: none!important; }
 .pointer-wrap {
   pointer-events: none;
   transition: opacity .2s ease;
 }
-/* 通过调用函数让卡片消失时需要直接显示对应指示器，不需要渐变 */
 .tinder-card.nope .nope-pointer-wrap,
 .tinder-card.like .like-pointer-wrap,
 .tinder-card.super .super-pointer-wrap {
   opacity: 1!important;
 }
 
-/* 按钮样式 */
 .btns {
   margin: auto;
   height: 80px;
@@ -377,7 +365,6 @@ export default class Home extends Vue {
 }
 .btns img{ width: 80px; }
 
-/* 卡片内的3种状态指示器位置，透明度会由组件自动调整 */
 .nope-pointer { right: 10px; }
 .like-pointer { left: 10px; }
 .nope-pointer,
@@ -399,7 +386,6 @@ export default class Home extends Vue {
   height: 78px;
 }
 
-/* slot内图片样式 */
 .pic {
   width: 350px;
   height: 350px;
