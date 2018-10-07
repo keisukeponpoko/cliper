@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <img src="./assets/logo.png">
-    </div>
     <router-view/>
   </div>
 </template>
@@ -17,8 +14,5 @@
 }
 #nav {
   text-align: left;
-  img {
-    width: 120px;
-  }
 }
 </style>

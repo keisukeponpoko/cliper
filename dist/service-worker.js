@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.2/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.7033e0f59eae8250a1e1edfa1a04b926.js"
+  "/precache-manifest.1ba74d93b08b8f2e64893ce7c0957c75.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "roomcliper"});
