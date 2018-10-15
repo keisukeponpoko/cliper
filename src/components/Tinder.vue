@@ -237,7 +237,7 @@ export default class Home extends Vue {
       const ratio = x / (this.size.width * 0.5);
       state.ratio = ratio;
       const rotate = 10 * ratio * startPoint;
-      style.transform = `translate3d(${x}px,${y}px,0) rotate(${rotate}deg)`;
+      style.transform = `translate3d(${x}px,${y}px,${y}px) rotate(${rotate}deg)`;
       style.transition = 'none';
     }
     return style;
